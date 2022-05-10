@@ -1,4 +1,5 @@
 const bookModel = require("../models/bookModel");
+const reviewModel = require("../models/reviewModel");
 const validator = require("../validator/validator")
 
 
@@ -72,7 +73,22 @@ const createReview = async(req,res)=>{
         return res.status(400).send({ status: false, message: "No data should be deleted At the time of Creation" })
     }
 
-    // Finally Create the Review 
+    // Finally Create the new Review Data 
+    const data = { bookId, reviewedBy, reviewedAt, rating, review }
+    let newReview = await reviewModel.create(data);
+    
+    // Now We have Update the review count in book
+    // First Check review Count
+    let CheckReviewCount = await reviewModel.find({ bookId: bookID, isDeleted: false }).count()
+
+    // Then Update the Review Count
+    let updatedCount = await bookModel.findOneAndUpdate(
+        {_id: bookID, isDeleted:false},
+        {$set: { review: CheckReviewCount }},
+        {new:true})
+    
+    return res.status(201).send({status:true, msg: "Review Submitted Successfully", data: {...newReview, ...updatedCount}})
+
 }
 catch(err)
 {

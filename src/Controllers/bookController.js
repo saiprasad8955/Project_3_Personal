@@ -220,7 +220,7 @@ const getById = async (req, res) => {
 
         bookData.reviews = reviewCount;
         
-        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject(), reviewsData: reviews } })
+        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject() , reviewsData: reviews } })
 
       } else {
 
