@@ -31,7 +31,7 @@ const isValidPincode = function(value) {
   };
 
  const check = (value)=>{
-    return value.every(ele => typeof(ele) === "string")
+    return value.every(ele => typeof(ele) === (("string") && ele !== "undefined"  ))
 }
 
 // const removeWhiteSpcAndEmpStr = (subArr) => {

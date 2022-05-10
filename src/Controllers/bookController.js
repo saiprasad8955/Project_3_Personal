@@ -166,27 +166,22 @@ const getAllBooks = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
+
       const bookId = req.params.bookId;
   
-      if (!validator.isValidObjectId(bookId)) {
-        return res
-          .status(404)
-          .send({ status: false, message: 'book Id is not valid' });
+      if (! validator.isValidObjectId(bookId)) {
+        return res.status(404).send({ status: false, message: 'book Id is not valid' });
       }
   
-      let bookData = await bookModel.findById(bookId);
+      let bookData = await bookModel.find({isDeleted:false, _id: bookId});
   
-      if (!bookData) {
-        return res
-          .status(404)
-          .send({ status: false, message: 'Book Data not found.' });
+      if (! bookData) {
+        return res.status(404).send({ status: false, message: 'Book Data not found.' });
       }
   
       bookData.reviewsData = [reviews.length ? reviews : []];
   
-      return res
-        .status(200)
-        .send({ status: true, message: 'Success', data: { finalData } });
+      return res.status(200).send({ status: true, message: 'Success', data: { finalData } });
     } catch (err) {
       return res.status(500).send({ status: false, msg: err.msg });
     }
@@ -197,53 +192,38 @@ const getById = async (req, res) => {
       const bookId = req.params.bookId;
   
       if (!validator.isValidObjectId(bookId)) {
-        return res
-          .status(404)
-          .send({ status: false, message: 'book Id is not valid' });
+        return res.status(404).send({ status: false, message: 'book Id is not valid' });
       }
   
       const { title, excerpt, ISBN, releasedAt } = reqBody;
   
       // Check data is coming or not
       if (!validator.isValidReqBody(reqBody)) {
-        return res
-          .status(400)
-          .send({ status: false, message: 'Please Enter the All Book Details' });
+        return res.status(400).send({ status: false, message: 'Please Enter the All Book Details' });
       }
   
       if (title && !validator.isValid2(title)) {
-        return res
-          .status(400)
-          .send({ status: false, message: 'Please Enter Valid title' });
+        return res.status(400).send({ status: false, message: 'Please Enter Valid title' });
       }
   
       const duplicateTitle = await bookModel.findOne({ title: title });
       if (duplicateTitle) {
-        return res.status(400).send({
-          status: false,
-          message: 'Title is Already presents try with another title.',
-        });
+        return res.status(400).send({ status: false, message: 'Title is Already presents try with another title.',});
       }
   
       if (excerpt && !validator.isValid2(excerpt)) {
-        return res
-          .status(400)
-          .send({ status: false, message: 'Please enter valid excerpt' });
+        return res.status(400).send({ status: false, message: 'Please enter valid excerpt' });
       }
   
       let reISBN = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/;
       if (ISBN && !reISBN.test(ISBN)) {
-        return res
-          .status(400)
-          .send({ status: false, message: 'Please Enter a Valid ISBN' });
+        return res.status(400).send({ status: false, message: 'Please Enter a Valid ISBN' });
       }
   
       // Check duplicate ISBN
       const duplicateISBN = await bookModel.findOne({ ISBN: ISBN });
       if (duplicateISBN) {
-        return res
-          .status(400)
-          .send({ status: true, message: 'ISBN is already exist' });
+        return res.status(400).send({ status: true, message: 'ISBN is already exist' });
       }
   
       let reAt = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/; // YYYY-MM-DD
@@ -260,16 +240,12 @@ const getById = async (req, res) => {
         { new: true }
       );
   
-      if (!bookData) {
-        return res
-          .status(404)
-          .send({ status: false, message: 'Book Data not found.' });
+      if (! bookData) {
+        return res.status(404).send({ status: false, message: 'Book Data not found.' });
       }
   
       if (bookData.isDeleted == true) {
-        return res
-          .status(404)
-          .send({ status: false, message: 'Book Data not found.' });
+        return res.status(404).send({ status: false, message: 'Book Data not found.' });
       }
     } catch (err) {
       return res.status(500).send({ status: false, msg: err.msg });
