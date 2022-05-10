@@ -199,7 +199,7 @@ const getById = async (req, res) => {
 
     // Valid BookId
     if (!validator.isValidObjectId(bookId)) {
-      return res.status(404).send({ status: false, message: 'book Id is not valid' });
+      return res.status(404).send({ status: false, message: 'Book Id is not valid' });
     }
 
     // Find Bookdata in Bookmodel
@@ -207,7 +207,8 @@ const getById = async (req, res) => {
 
     // IF book exists then check for reviews
     if (bookData) {
-      let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+      
+      let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id:1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
 
       // Store review Length As count from reviews Data
       let reviewCount = reviews.length
@@ -217,13 +218,14 @@ const getById = async (req, res) => {
 
         // Set Reviews Count in BookData's reviews key
 
-        bookData.reviews = reviewCount
-        return res.status(200).send({ status: true, message: 'Boolist', data: { ...bookData.toObject(), reviewData: reviews } })
+        bookData.reviews = reviewCount;
+        
+        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject(), reviewsData: reviews } })
 
       } else {
 
         // Send the Empty array provided by find 
-        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject(), reviewData: reviews } })
+        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject(), reviewsData: reviews } })
 
       }
     } else {
