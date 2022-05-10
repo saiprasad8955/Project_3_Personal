@@ -21,46 +21,54 @@ const createBook = async (req, res) => {
     // Object Destructing
     let { title, excerpt, userId, ISBN, category, subcategory, releasedAt, reviews, isDeleted } = reqBody;
 
+    // Check Title is Coming Or not
     if (!validator.isValid(title)) {
       return res.status(400).send({ status: false, message: 'Title is Required' });
     }
 
+    // Check Title Coming is Valid or not 
     if (!validator.isValid2(title)) {
       return res.status(400).send({ status: false, message: 'Please Enter Valid title' });
     }
 
+    // Check duplicate Title
     const duplicateTitle = await bookModel.findOne({ title: title })
     if (duplicateTitle) {
       return res.status(400).send({ status: false, message: "Title is Already presents" })
     }
 
-
+    // Check excerpt is Coming Or not
     if (!validator.isValid(excerpt)) {
       return res.status(400).send({ status: false, message: 'Please Enter the Excerpt' });
     }
 
+    // Check excerpt Coming is Valid or not 
     if (!validator.isValid2(excerpt)) {
       return res.status(400).send({ status: false, message: 'Please enter valid excerpt' });
     }
 
+    // Check userId is Coming Or not
     if (!validator.isValid(userId)) {
       return res.status(400).send({ status: false, message: 'userId is Required' });
     }
 
+    // Check USER id Coming is Valid or not 
     if (!validator.isValidObjectId(userId)) {
       return res.status(400).send({ status: false, message: 'Please enter valid user ID' });
     }
 
-    // Check UserId Exists or not
+    // Check UserId is Exists or not
     const UserId = await userModel.findOne({ userId: userId });
     if (!UserId) {
       return res.status(400).send({ status: true, message: "User ID is Not exists in our Database" })
     }
 
+    // Check ISBN is Coming Or not
     if (!validator.isValid(ISBN)) {
       return res.status(400).send({ status: false, message: 'ISBN is Required' });
     }
 
+    // Check Title Coming is Valid or not 
     let reISBN = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
     if (!reISBN.test(ISBN)) {
       return res.status(400).send({ status: false, message: 'Please Enter a Valid ISBN' });
@@ -72,42 +80,51 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: true, message: "ISBN is already exist" })
     }
 
+    // Check category is Coming Or not
     if (!validator.isValid(category)) {
       return res.status(400).send({ status: false, message: 'category is Required' });
     }
 
+    // Check category Coming is Valid or not 
     if (!validator.isValid2(category)) {
       return res.status(400).send({ status: false, message: 'Please Enter a Valid Category' });
     }
 
+    // Check subcategory is Coming Or not
     if (!validator.isValid(subcategory)) {
       return res.status(400).send({ status: false, message: 'subcategory is Required' });
     }
 
+    // Check subcategory Coming is Valid or not 
     if (!validator.check(subcategory)) {
       return res.status(400).send({ status: false, message: 'Enter Valid Subcategory' });
     }
 
-    //    subcategory = validator.removeWhiteSpcAndEmpStr(subcategory);
-
+    // Check Title is Coming Or not
     if (!validator.isValid(releasedAt)) {
       return res.status(400).send({ status: false, message: 'Please Enter Released Date' });
     }
 
+    // Check releasedAt Coming is Valid or not 
     let reAt = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;// YYYY-MM-DD
     if (!reAt.test(releasedAt)) {
       return res.status(400).send({ status: false, message: "Released Date Format Should be in 'YYYY-MM-DD' Format " });
     }
 
+    // Check if reviews are Coming then Valid or not 
     if (reviews && (typeof reviews !== 'number')) {
       return res.status(400).send({ status: false, message: "Reviews Must be numbers" })
     }
 
+    // Check isDeleted true
     if (isDeleted === true) {
       return res.status(400).send({ status: false, message: "No Data Should Be Deleted At The Time Of Creation" })
     }
+   
+    // After all Validations Create Book Successfully 
     const bookDetails = await bookModel.create(reqBody)
     return res.status(201).send({ status: true, message: 'successfully created ', data: bookDetails })
+
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message })
   }
