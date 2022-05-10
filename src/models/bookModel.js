@@ -5,7 +5,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const bookSchema = new mongoose.Schema({
     title: { type: String, required: true, unique: true, trim: true, lowercase:true},
 
-    excerpt: { type: String, required: true, trim: true },
+    excerpt: { type: String, required: true, trim: true, lowercase:true},
 
     userId: { type: ObjectId, ref:"User", required: true, trim: true },
 
@@ -21,7 +21,7 @@ const bookSchema = new mongoose.Schema({
 
     isDeleted: { type: Boolean, default: false },
 
-    releasedAt: { type: Date, required: true },
+    releasedAt: { type: String, required: true },
 
 }, { timestamps: true });
 

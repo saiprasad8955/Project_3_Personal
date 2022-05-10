@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
-const validator = require("../validator/validators")
+const validator = require("../validator/validator")
 
 
 const register = async(req, res) => {
@@ -9,7 +9,7 @@ const register = async(req, res) => {
         const requestBody = req.body;
 
         // Object Destructing
-        const { title, name, phone, email, password } = requestBody
+        const { title, name, phone, email, password,address } = requestBody
 
         // Validation Starts
         // first Check body is coming or not 
@@ -81,6 +81,21 @@ const register = async(req, res) => {
         const passRE = /^(?!\S*\s)(?=\D*\d)(?=.*[!@#$%^&*])(?=[^A-Z]*[A-Z]).{8,15}$/;
         if (! passRE.test(password)) {
             return res.status(400).send({ status: true, msg: "Please Enter Valid Password" })
+        }
+
+        if(address.street && !validator.isValid2(address.street)){
+            res.status(400).send({status: false , message: 'Enter a valid Street'})
+            return
+        }
+
+        if(address.city && !validator.isValid2(address.city)){
+            res.status(400).send({status: false , message: 'Enter a valid city name'})
+            return
+        }
+
+        if(address.pincode && !validator.isValidPincode(address.pincode)){
+            res.status(400).send({status: false , message: 'Enter a valid city pincode'})
+            return
         }
 
 

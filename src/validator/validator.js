@@ -34,6 +34,17 @@ const isValidPincode = function(value) {
     return value.every(ele => typeof(ele) === "string")
 }
 
+// const removeWhiteSpcAndEmpStr = (subArr) => {
+//     if (Array.isArray(subArr)) {
+//         let arr=[];
+//         for (let i = 0; i < subArr.length; i++) {
+//                 if(subArr[i].trim().length>0)
+//             arr.push(subArr[i].toLowerCase().trim())
+//         }
+//         return [...arr];
+//     }
+// }
+
 
 module.exports={ 
     isValidReqBody,
@@ -42,4 +53,5 @@ module.exports={
     isValidPincode,
     isValidObjectId,
     check
+    
 }
