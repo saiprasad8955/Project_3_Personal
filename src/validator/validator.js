@@ -13,8 +13,8 @@ const isValid = function (value) {
 
 const isValid2 = function (value) {
     const dv = /[a-zA-Z]/;
-    if (typeof value !== 'string') return false;
-    if (dv.test(value) === false) return false;
+    if (typeof value.trim() !== 'string') return false;
+    if (dv.test(value.trim()) === false) return false;
     return true;
 }
 
@@ -26,12 +26,12 @@ const isValidPincode = function(value) {
  }
 
  const isValidObjectId = (objectId) => {
-    if (mongoose.Types.ObjectId.isValid(objectId)) return true;
+    if (mongoose.Types.ObjectId.isValid(objectId.trim())) return true;
     return false;
   };
 
  const check = (value)=>{
-    return value.every(ele => typeof(ele) === (("string") && ele !== "undefined"  ))
+    return value.every(ele => typeof(ele) === ("string"))
 }
 
 // const removeWhiteSpcAndEmpStr = (subArr) => {
