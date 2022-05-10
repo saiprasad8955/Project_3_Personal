@@ -8,19 +8,18 @@ const validator = require("../validator/validators")
 const createBook = async (req, res) => {
 
     try {
+
         // Extract body 
         const reqBody = req.body;
 
         // Object Destructing
-        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt, reviews,isDeleted
-        } = reqBody;
+        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt, reviews, isDeleted } = reqBody;
 
         // Check data is coming or not
         if (! validator.isValidReqBody(reqBody)) {
             return res.status(400).send({ status: false, message: "Please Enter the All Book Details" })
         }
 
-        
         if (! validator.isValid(title)) {
             return res.status(400).send({ status: false, message: 'Title is Required' });
         }
@@ -65,7 +64,6 @@ const createBook = async (req, res) => {
         if (! reISBN.test(ISBN)){
             return res.status(400).send({ status: false, message: 'Please Enter a Valid ISBN' });
         }
-
 
         // Check duplicate ISBN
         const duplicateISBN = await bookModel.findOne({ ISBN: ISBN });
