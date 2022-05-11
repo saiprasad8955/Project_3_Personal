@@ -125,12 +125,14 @@ const login = async (req,res)=>{
         }
 
         // Check Email is Coming Or not 
-        if(! validator.isValid(email)){
+        let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if(! re.test(email)){
         return res.status(400).send({ status: false, msg: "Please Enter the Email" })
         }
 
         // Check Email is Present 
         const user = await userModel.findOne({email: email, password: password}) 
+        console.log(user)
         if(! user){
         return res.status(400).send({ status: false, msg: "Entered Email or Password is Not Registered" })
         }
@@ -141,7 +143,8 @@ const login = async (req,res)=>{
         }
 
         // Generate Token 
-        const token = jwt.sign({ userId: user._id.toString() },"Book-Management",{ expiresIn:"15min", iat: new Date.now().toISOString()});
+        const token = jwt.sign({ userId: user._id.toString()},"Book-Management",{expiresIn:"1d"});
+        // console.log(token);
 
         // Send the token to Response Header
         res.setHeader("x-api-key", token);

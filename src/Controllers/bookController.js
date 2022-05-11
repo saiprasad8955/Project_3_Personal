@@ -116,10 +116,10 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: "Reviews Must be numbers" })
     }
 
-    // Check isDeleted true
-    if (isDeleted === true) {
-      return res.status(400).send({ status: false, message: "No Data Should Be Deleted At The Time Of Creation" })
-    }
+    // Check isDeleted true this casse dont come at any scenario
+    // if (isDeleted === true) {
+    //   return res.status(400).send({ status: false, message: "No Data Should Be Deleted At The Time Of Creation" })
+    // }
 
     // After all Validations Create Book Successfully 
     const bookDetails = await bookModel.create(reqBody)
@@ -208,6 +208,7 @@ const getById = async (req, res) => {
     // IF book exists then check for reviews
     if (bookData) {
       
+      // also by findOneAndUpdate
       let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id:1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
 
       // Store review Length As count from reviews Data
@@ -219,13 +220,25 @@ const getById = async (req, res) => {
         // Set Reviews Count in BookData's reviews key
 
         bookData.reviews = reviewCount;
-        
-        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject() , reviewsData: reviews } })
+        // use Spread operator for adding new key 
+        const { ...data1 } = bookData;
+
+        // Add key reviewsData
+        data1._doc.reviewsData = reviews
+
+        return res.status(200).send({ status: true, message: 'Booklist', data: /*{ ...bookData._doc , reviewsData: reviews }*/data1._doc })
 
       } else {
 
         // Send the Empty array provided by find 
-        return res.status(200).send({ status: true, message: 'Booklist', data: { ...bookData.toObject(), reviewsData: reviews } })
+
+        // use Spread operator for adding new key 
+        const { ...data2 } = bookData;
+       
+        // Add key reviewsData
+        data2._doc.reviewsData = reviews
+
+        return res.status(200).send({ status: true, message: 'Booklist', data: /* {...bookData._doc, reviewsData: reviews }*/data2._doc })
 
       }
     } else {

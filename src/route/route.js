@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../Controllers/userController");
 const bookController = require("../Controllers/bookController");
 const reviewController = require("../Controllers/reviewController");
+const mw = require("../middleware/middleware");
 
 //-----------------------------USER API's
 router.post("/registerUser",userController.register);
@@ -10,24 +11,17 @@ router.post("/login",userController.login);
 
 //-----------------------------BOOK API's
 // PROTECTED ROUTES
-router.post("/books",bookController.createBook);
-router.get("/books",bookController.getAllBooks);
-router.get("/books/:bookId",bookController.getById);
-router.put("/books/:bookId",bookController.updateById);
-router.delete("/books/:bookId",bookController.deletedById);
+router.post("/books", mw.authentication, bookController.createBook);
+router.get("/books", mw.authentication, bookController.getAllBooks);
+router.get("/books/:bookId", mw.authentication, bookController.getById);
+router.put("/books/:bookId", mw.authentication, bookController.updateById);
+router.delete("/books/:bookId", mw.authentication, bookController.deletedById);
 
 //-----------------------------REVIEW API's
 // PROTECTED ROUTED
-router.get("/books/:bookId/review",reviewController.createReview);
-router.put("/books/:bookId/review/:reviewId",reviewController.updateReview);
-router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview);
-
-
-
-
-
-
-
+router.post("/books/:bookId/review", mw.authentication, reviewController.createReview);
+router.put("/books/:bookId/review/:reviewId", mw.authentication, reviewController.updateReview);
+router.delete("/books/:bookId/review/:reviewId", mw.authentication, reviewController.deleteReview);
 
 
 module.exports =  router ;
