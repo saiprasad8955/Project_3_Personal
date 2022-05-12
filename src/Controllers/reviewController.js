@@ -164,7 +164,7 @@ const updateReview = async(req,res)=>{
         return res.status(400).send({ status: false, message: "Please Enter Valid Reviewer's Name" })
     }
 
-    // Check reviewedBy is Coming or not 
+    // Check rating is Coming or not 
     if(! validator.isValid(rating)){
         return res.status(400).send({ status: false, message: "Please Enter Ratings" })
     }
@@ -251,9 +251,9 @@ const deleteReview = async(req,res)=>{
         return res.status(400).send({ status: false, message: "You can't update reviews by another book ID !! please enter correct book ID" })
        }
 
-       let deleteReview = await reviewModel.findOneAndUpdate({_id:reviewID , isDeleted :false} ,{isDeleted : true},{new : true})
+       let deleteReview = await reviewModel.findOneAndUpdate({_id: reviewID , isDeleted :false} ,{isDeleted : true},{new : true})
 
-       if(!deleteReview){
+       if(! deleteReview){
         return res.status(400).send({ status: false, message: "Review is already deleted" })
        }
 
