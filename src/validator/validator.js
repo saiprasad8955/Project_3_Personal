@@ -1,7 +1,7 @@
 const { default: mongoose } = require("mongoose");
 
 const isValidReqBody = (value) => {
-    if (Object.keys(value).length > 0) return true;
+    if (Object.getOwnPropertyNames(value).length > 0) return true;
     return false;
   };
 

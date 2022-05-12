@@ -11,17 +11,17 @@ router.post("/login",userController.login);
 
 //-----------------------------BOOK API's
 // PROTECTED ROUTES
-router.post("/books", mw.authentication, bookController.createBook);
-router.get("/books", mw.authentication, bookController.getAllBooks);
-router.get("/books/:bookId", mw.authentication, bookController.getById);
-router.put("/books/:bookId", mw.authentication, bookController.updateById);
-router.delete("/books/:bookId", mw.authentication, bookController.deletedById);
+router.post("/books", /*mw.authentication,*/ bookController.createBook);
+router.get("/books", /*mw.authentication,*/ bookController.getAllBooks);
+router.get("/book/:bookId", /*mw.authentication,*/ bookController.getById);
+router.put("/books/:bookId", /*mw.authentication,*/ bookController.updateById);
+router.delete("/books/:bookId", /*mw.authentication,*/ bookController.deletedById);
 
 //-----------------------------REVIEW API's
 // PROTECTED ROUTED
-router.post("/books/:bookId/review", mw.authentication, reviewController.createReview);
-router.put("/books/:bookId/review/:reviewId", mw.authentication, reviewController.updateReview);
-router.delete("/books/:bookId/review/:reviewId", mw.authentication, reviewController.deleteReview);
+router.post("/books/:bookId/review", /*mw.authentication,*/ reviewController.createReview);
+router.put("/books/:bookId/review/:reviewId", /*mw.authentication,*/ reviewController.updateReview);
+router.delete("/books/:bookId/review/:reviewId",/* mw.authentication,*/ reviewController.deleteReview);
 
 
 module.exports =  router ;
