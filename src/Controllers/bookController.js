@@ -5,7 +5,7 @@ const reviewModel = require('../models/reviewModel');
 const validator = require("../validator/validator")
 
 
-
+// CREATE BOOK
 const createBook = async (req, res) => {
 
   try {
@@ -128,6 +128,7 @@ const createBook = async (req, res) => {
   }
 };
 
+// GET ALL BOOKS 
 const getAllBooks = async (req, res) => {
 
   try {
@@ -191,6 +192,7 @@ const getAllBooks = async (req, res) => {
 
 }
 
+// GET BOOKS BY ID
 const getById = async (req, res) => {
   try {
 
@@ -249,6 +251,7 @@ const getById = async (req, res) => {
   }
 };
 
+// UPDATE BOOK BY ID
 const updateById = async (req, res) => {
   try {
     // Extract bookId from params
@@ -333,6 +336,7 @@ const updateById = async (req, res) => {
   }
 };
 
+// DELETE BOOK BY ID
 const deletedById = async (req, res) => {
   try {
 
