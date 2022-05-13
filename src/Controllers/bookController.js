@@ -116,14 +116,12 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: "Reviews Must be numbers" })
     }
 
-    // Check isDeleted true this casse dont come at any scenario
-    // if (isDeleted === true) {
-    //   return res.status(400).send({ status: false, message: "No Data Should Be Deleted At The Time Of Creation" })
-    // }
-
     // After all Validations Create Book Successfully 
-    const bookDetails = await bookModel.create(reqBody)
-    return res.status(201).send({ status: true, message: 'successfully created ', data: bookDetails })
+    const bookDetails = await bookModel.create(reqBody);
+
+    // Show Book Excluding deleted At key
+    const book = await bookModel.find({title:title}).select({deletedAt:0})
+    return res.status(201).send({ status: true, message: 'Book successfully created ', data: book })
 
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message })

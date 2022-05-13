@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const validator = require("../validator/validator")
 
-
+// Register User
 const register = async(req, res) => {
     try {
         // Extract data from RequestBody
@@ -109,7 +109,6 @@ const register = async(req, res) => {
 
 };
 
-
 // User Login 
 const login = async (req,res)=>{
     try{
@@ -144,7 +143,6 @@ const login = async (req,res)=>{
 
         // Generate Token 
         const token = jwt.sign({ userId: user._id.toString()},"Book-Management",{expiresIn:"1d"});
-        // console.log(token);
 
         // Send the token to Response Header
         res.setHeader("x-api-key", token);

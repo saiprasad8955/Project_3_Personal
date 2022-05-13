@@ -3,6 +3,7 @@ const reviewModel = require("../models/reviewModel");
 const validator = require("../validator/validator")
 
 
+// Create Review
 const createReview = async(req,res)=>{
     try{
     // extract bookID from Path parms
@@ -106,8 +107,7 @@ catch(err)
 
 };
 
-
-
+// Update the Review
 const updateReview = async(req,res)=>{
       try{
     // extract bookID from Path parms
@@ -207,8 +207,7 @@ catch(err)
 
 }; 
 
-
-
+// Delete Review
 const deleteReview = async(req,res)=>{
     try{
         // extract bookID from Path parms
