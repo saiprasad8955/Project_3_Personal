@@ -63,6 +63,11 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: true, message: "User ID is Not exists in our Database" })
     }
 
+    // AUTHORIZATION
+    if (userId.toString() !== req.decodedToken) {
+      return res.status(403).send({ satus: false, message: `Unauthorized access!! Owner info doesn't match ` })
+    }
+
     // Check ISBN is Coming Or not
     if (!validator.isValid(ISBN)) {
       return res.status(400).send({ status: false, message: 'ISBN is Required' });
@@ -120,7 +125,7 @@ const createBook = async (req, res) => {
     const bookDetails = await bookModel.create(reqBody);
 
     // Show Book Excluding deleted At key
-    const book = await bookModel.find({title:title}).select({deletedAt:0})
+    const book = await bookModel.find({ title: title }).select({ deletedAt: 0 })
     return res.status(201).send({ status: true, message: 'Book successfully created ', data: book })
 
   } catch (err) {
@@ -171,14 +176,15 @@ const getAllBooks = async (req, res) => {
 
     // If the Queries are coming then Find the Data by Queries
     if (reqQuery) {
-      let bookData = await bookModel.findOne(
-        { isDeleted: false, $or: [{ userId: userId }, { category: category }, { subcategory: subcategory }] })
-        .sort({ title: 1 })
-        .select({ _id: 1, title: 1, excerpt: 1, userId: 1, subcategory: 1, category: 1, releasedAt: 1, reviews: 1 })
 
-        console.log(bookData);
+      let bookData = await bookModel.find(
+        { $or: [{ userId: userId }, { category: category }, { subcategory: subcategory }] })
+        .sort({ title: 1 })
+        .select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+
+      console.log(bookData);
       // If Queried Book Not Found then send error   
-      if ( ! bookData ) {
+      if (bookData.isDeleted === true ) {
         return res.status(404).send({ status: false, message: 'Books Not Found With these Filters or might be deleted ' });
       }
 
@@ -208,19 +214,19 @@ const getById = async (req, res) => {
 
     // IF book exists then check for reviews
     if (bookData) {
-      
+
       // also by findOneAndUpdate
-      let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id:1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+      let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
 
       // Store review Length As count from reviews Data
       let reviewCount = reviews.length
 
       // if review count is > 0 then send response
-      if (reviewCount > 0) {
+      if (reviewCount > 0) { 
 
         // Set Reviews Count in BookData's reviews key
 
-        bookData.reviews = reviewCount;
+        // bookData.reviews = reviewCount;
         // use Spread operator for adding new key 
         const { ...data1 } = bookData;
 
@@ -234,8 +240,8 @@ const getById = async (req, res) => {
         // Send the Empty array provided by find 
 
         // use Spread operator for adding new key 
-        const { ...data2 } = bookData;
-       
+        const { ...data2 } = bookData ;
+
         // Add key reviewsData
         data2._doc.reviewsData = reviews
 
@@ -260,6 +266,15 @@ const updateById = async (req, res) => {
     // Validate the Book ID
     if (!validator.isValidObjectId(bookId)) {
       return res.status(404).send({ status: false, message: 'book Id is not valid' });
+    }
+
+    // Find the book with valid book id
+    let validBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
+    if (!validBook) return res.status(404).send({ status: false, message: "No book found" })
+
+    // AUTHORIZATION
+    if (validBook.userId.toString() !== req.decodedToken) {
+      return res.status(403).send({ satus: false, message: `Unauthorized access! Owner info doesn't match` })
     }
 
     // Extracting request Body
@@ -352,6 +367,11 @@ const deletedById = async (req, res) => {
     let filter = { _id: bookID, isDeleted: false }
     const book = await bookModel.findOne({ filter })
     // console.log(book);
+
+    // AUTHORIZATION 
+    if (book.userId.toString() != req.decodedToken) {
+      return res.status(403).send({ satus: false, message: `Unauthorized access! Owner info doesn't match` })
+    }
 
     // IF book not found then send error
     if (!book) {

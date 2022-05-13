@@ -16,6 +16,7 @@ const authentication = async function(req,res,next){
     //if token is present then decode the token
     let decodedToken = jwt.verify(token,"Book-Management")
     
+    console.log(decodedToken);
     // Check Decoded token is here or not
     if(!decodedToken) return res.status(401).send({ status : false, msg : "Token is Not Present"})
 

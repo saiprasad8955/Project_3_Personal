@@ -9,6 +9,11 @@ const createReview = async(req,res)=>{
     // extract bookID from Path parms
     let bookID = req.params.bookId;
 
+    // Valid BookID
+    if (!validator.isValidObjectId(bookID)) {
+        return res.status(400).send({ status: false, message: "Book ID is Not Valid" })
+    }
+
     // store request Body in REQBODy
     let reqBody = req.body;
 
@@ -18,17 +23,7 @@ const createReview = async(req,res)=>{
     }
 
     // Object Destructing
-    let {bookId,  reviewedBy, rating, review, isDeleted} = reqBody;
-
-    // Check BookID is coming or not 
-    if (!validator.isValid(bookId)) {
-        return res.status(400).send({ status: false, message: "Book ID is Required Writing Review" })
-    }
-
-    // Valid BookID
-    if (!validator.isValidObjectId(bookId)) {
-        return res.status(400).send({ status: false, message: "Book ID is Not Valid" })
-    }
+    let { reviewedBy, rating, review, isDeleted} = reqBody;
 
     // Check Book is present or not
     const bookPresent = await bookModel.findOne({ _id:bookID, isDeleted:false })
@@ -71,8 +66,12 @@ const createReview = async(req,res)=>{
         return res.status(400).send({ status: false, message: "No data should be deleted At the time of Creation" })
     }
 
+    
     // Finally Create the new Review Data 
-    const data = { bookId, reviewedBy, reviewedAt, rating, review }
+    const data = { reviewedBy, reviewedAt, rating, review }
+
+    // Add bookID into review 
+    data.bookId = bookID;
 
     let newReview = await reviewModel.create(data);
     
@@ -84,7 +83,7 @@ const createReview = async(req,res)=>{
     // Then Update the Review Count
     let updatedCount = await bookModel.findOneAndUpdate(
         {_id: bookID, isDeleted:false},
-        {$set: { review: CheckReviewCount }},
+        {$set : { review: CheckReviewCount }},
         {new:true})
 
 

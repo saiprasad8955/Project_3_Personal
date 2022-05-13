@@ -19,9 +19,9 @@ router.delete("/books/:bookId", /*mw.authentication,*/ bookController.deletedByI
 
 //-----------------------------REVIEW API's
 // PROTECTED ROUTED
-router.post("/books/:bookId/review", /*mw.authentication,*/ reviewController.createReview);
-router.put("/books/:bookId/review/:reviewId", /*mw.authentication,*/ reviewController.updateReview);
-router.delete("/books/:bookId/review/:reviewId",/* mw.authentication,*/ reviewController.deleteReview);
+router.post("/books/:bookId/review",  reviewController.createReview);
+router.put("/books/:bookId/review/:reviewId", reviewController.updateReview);
+router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview);
 
 
 module.exports =  router ;
