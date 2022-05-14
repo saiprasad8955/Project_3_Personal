@@ -24,11 +24,11 @@ const authentication = async function(req,res,next){
     // if Everything is ok then we head towards Api's
     next();
 
-}catch(err)
-{
-res.status(401).send({ status: false, err : "Token is Invalid" })
 }
+catch(err){
+    return res.status(401).send({ status: false, err : "Token is Invalid" })
 }
+};
 
 
 module.exports={ authentication }

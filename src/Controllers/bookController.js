@@ -64,7 +64,10 @@ const createBook = async (req, res) => {
     }
 
     // AUTHORIZATION
-    if (userId.toString() !== req.decodedToken) {
+    // Storing Decoded Token into variable named decodedToken
+    let decodedToken =  req.decodedToken
+    // Authorize the author that is requesting to create book
+    if (userId.toString() !== decodedToken.userId) {
       return res.status(403).send({ satus: false, message: `Unauthorized access!! Owner info doesn't match ` })
     }
 
@@ -226,15 +229,15 @@ const getById = async (req, res) => {
       if (reviewCount > 0) { 
 
         // Set Reviews Count in BookData's reviews key
+        bookData.reviews = reviewCount;
 
-        // bookData.reviews = reviewCount;
         // use Spread operator for adding new key 
         const { ...data1 } = bookData;
 
         // Add key reviewsData
         data1._doc.reviewsData = reviews
 
-        return res.status(200).send({ status: true, message: 'Booklist', data: /*{ ...bookData._doc , reviewsData: reviews }*/data1._doc })
+        return res.status(200).send({ status: true, message: 'Booklist', data: data1._doc })
 
       } else {
 
@@ -246,7 +249,7 @@ const getById = async (req, res) => {
         // Add key reviewsData
         data2._doc.reviewsData = reviews
 
-        return res.status(200).send({ status: true, message: 'Booklist', data: /* {...bookData._doc, reviewsData: reviews }*/data2._doc })
+        return res.status(200).send({ status: true, message: 'Booklist', data: data2._doc })
 
       }
     } else {
