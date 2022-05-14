@@ -40,7 +40,7 @@ password:{
 address:{
     street: { type:String, trim:true },
     city:   { type:String, trim:true },
-    pincode:{ type:Number, trim:true}
+    pincode:{ type:Number, trim:true } 
 },
 },{timestamps:true});
 

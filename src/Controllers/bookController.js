@@ -1,4 +1,3 @@
-const { default: mongoose } = require('mongoose');
 const bookModel = require('../models/bookModel');
 const userModel = require('../models/userModel');
 const reviewModel = require('../models/reviewModel');
@@ -67,7 +66,7 @@ const createBook = async (req, res) => {
     // Storing Decoded Token into variable named decodedToken
     let decodedToken =  req.decodedToken
     // Authorize the author that is requesting to create book
-    if (userId.toString() !== decodedToken.userId) {
+    if (userId !== decodedToken.userId) {
       return res.status(403).send({ satus: false, message: `Unauthorized access!! Owner info doesn't match ` })
     }
 
@@ -338,7 +337,7 @@ const updateById = async (req, res) => {
     let query = { _id: bookId, isDeleted: false }
     let updatedBook = await bookModel.findOneAndUpdate(
       query,
-      { $set: reqBody/*{ $or: [{ title: title }, { excerpt: excerpt }, { releasedAt: releasedAt }, { ISBN: ISBN }]}*/ },
+      { $set: reqBody },
       { new: true }
     );
 

@@ -11,7 +11,7 @@ router.post("/login",userController.login);
 
 //-----------------------------BOOK API's
 // PROTECTED ROUTES
-router.post("/books", /*mw.authentication,*/ bookController.createBook);
+router.post("/books", mw.authentication, bookController.createBook);
 router.get("/books", /*mw.authentication,*/ bookController.getAllBooks);
 router.get("/book/:bookId", /*mw.authentication,*/ bookController.getById);
 router.put("/books/:bookId", /*mw.authentication,*/ bookController.updateById);

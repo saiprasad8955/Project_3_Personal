@@ -78,24 +78,24 @@ const register = async(req, res) => {
         }
 
         // Validate Password 
-        const passRE = /^(?!\S*\s)(?=\D*\d)(?=.*[!@#$%^&*])(?=[^A-Z]*[A-Z]).{8,15}$/;
+        const passRE = /^(?!\S*\s)(?=\D*\d)(?=.*[!@#$%^&*])(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z]).{8,15}$/;
         if (! passRE.test(password)) {
             return res.status(400).send({ status: true, msg: "Please Enter Valid Password" })
         }
-
+        
+        // Validate street 
         if(address.street && !validator.isValid2(address.street)){
-            res.status(400).send({status: false , message: 'Enter a valid Street'})
-            return
+        return res.status(400).send({status: false , message: 'Enter a valid Street'})
         }
 
+        // Validate city
         if(address.city && !validator.isValid2(address.city)){
-            res.status(400).send({status: false , message: 'Enter a valid city name'})
-            return
+        return res.status(400).send({status: false , message: 'Enter a valid city name'})
         }
 
+        // Validate pincode
         if(address.pincode && !validator.isValidPincode(address.pincode)){
-            res.status(400).send({status: false , message: 'Enter a valid city pincode'})
-            return
+        return res.status(400).send({status: false , message: 'Enter a valid city pincode'})
         }
 
 
@@ -141,8 +141,9 @@ const login = async (req,res)=>{
         return res.status(400).send({ status: false, msg: "Please Enter the Password" })
         }
 
+
         // Generate Token 
-        const token = jwt.sign({ userId: user._id.toString()},"Book-Management",{expiresIn:"1d"});
+        const token = jwt.sign({ userId: user._id.toString()}, "Book-Management", {expiresIn:"10h"});
 
         // Send the token to Response Header
         res.setHeader("x-api-key", token);

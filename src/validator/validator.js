@@ -1,3 +1,4 @@
+const { type } = require("express/lib/response");
 const { default: mongoose } = require("mongoose");
 
 const isValidReqBody = (value) => {
@@ -13,8 +14,8 @@ const isValid = function (value) {
 
 const isValid2 = function (value) {
     const dv = /[a-zA-Z]/;
-    if (typeof value.trim() !== 'string') return false;
-    if (dv.test(value.trim()) === false) return false;
+    if (typeof value !== 'string') return false;
+    if (dv.test(value) === false) return false;
     return true;
 }
 
@@ -23,6 +24,9 @@ const isValidPincode = function (value)  {
     if(typeof value !== 'string') return false
     if(dv.test(value)=== false) return false
     return true
+ }
+ const check = (value)=>{
+   value.every(i=>typeof i ==="string"); return true
  }
 
  const isValidObjectId = (objectId) => {
@@ -35,5 +39,6 @@ module.exports = {
     isValid,
     isValid2,
     isValidPincode,
-    isValidObjectId
+    isValidObjectId,
+    check
 }
