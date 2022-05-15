@@ -67,7 +67,7 @@ const createBook = async (req, res) => {
     let decodedToken =  req.decodedToken
     // Authorize the author that is requesting to create book
     if (userId !== decodedToken.userId) {
-      return res.status(403).send({ satus: false, message: `Unauthorized access!! Owner info doesn't match ` })
+      return res.status(401).send({ satus: false, message: `Unauthorized access!! Owner info doesn't match ` })
     }
 
     // Check ISBN is Coming Or not
