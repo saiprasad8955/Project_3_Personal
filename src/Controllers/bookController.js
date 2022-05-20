@@ -366,9 +366,9 @@ const deletedById = async (req, res) => {
       return res.status(400).send({ status: false, message: "Book id is not valid" })
     }
 
-    // Find Book in database
+    // Find Book in Database
     let filter = { _id: bookID, isDeleted: false }
-    const book = await bookModel.findOne({ filter })
+    const book = await bookModel.findOne( filter )
     // console.log(book);
 
     // AUTHORIZATION 
